@@ -41,12 +41,12 @@ df.to_sql('stocks', conn, index=False, if_exists='replace')
 
 # top 10 closing prices for AAPL
 q1result = pd.read_sql("""
-select Symbol, Date, Close
-from stocks
-where symbol = 'AAPL'
-order by Close DESC
-limit 10
-""", conn
+    select Symbol, Date, Close
+    from stocks
+    where symbol = 'AAPL'
+    order by Close DESC
+    limit 10
+    """, conn
 )
 
 #average volume for each stock
@@ -78,5 +78,29 @@ q4result = pd.read_sql(
     limit 10
     """, conn)
 
-print(q4result)
+
+#single day with the largest price drop (open-close)
+q5result = pd.read_sql(
+    """
+    with ranked_stocks as (SELECT Symbol, Date, (Close - Open) as price_drop, dense_rank() over (partition by Symbol order by (Open - Close) DESC) as rank
+    from stocks
+    )
+    select Symbol, Date, price_drop
+    from ranked_stocks
+    where rank = 1
+    order by price_drop asc
+    """, conn
+)
+
+#mothly average closing price for each stock
+q6result = pd.read_sql(
+    """
+    select Symbol, strftime('%Y-%m', Date) as Month, avg(close) as avg_close
+    from stocks
+    where Date like '2020%'
+    group by Symbol, Month
+    """, conn
+)
+
 # print(df.head())
+print(q6result)
