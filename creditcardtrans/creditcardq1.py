@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+a=1
 df= pd.read_csv("creditcardtrans/credit_card_transQ1.csv")
 df= pd.DataFrame(df)
 
