@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 a=1
 df= pd.read_csv("creditcardtrans/credit_card_transQ1.csv")
 df= pd.DataFrame(df)
-
 x= df['category']
 y= df['amount']
 
